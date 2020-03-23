@@ -1,17 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <LedSign msg="Welcome to Your Vue.js App" :width="128" :height="8" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LedSign from './components/LedSign.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    LedSign
   }
 }
 </script>
