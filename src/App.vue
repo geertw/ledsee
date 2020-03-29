@@ -1,10 +1,52 @@
 <template>
   <div id="app">
-    <LedSign :message="message" :width="128" :height="7" />
+    <LedSign :message="message" :width="192" :height="7" :scrollMode="scrollMode" :align="alignment" />
 
     <hr>
 
-    <input type="text" v-model="message">
+    <div>
+      <h2>Configuration</h2>
+  
+      Message:<br>
+      <input type="text" v-model="message">
+
+      <br>
+
+      ScrollMode:<br>
+      <label>
+        <input type="radio" value="auto" v-model="scrollMode">
+        Auto
+      </label>
+
+      <label>
+        <input type="radio" value="scroll" v-model="scrollMode">
+        Scroll
+      </label>
+
+      <label>
+        <input type="radio" value="none" v-model="scrollMode">
+        Do not scroll
+      </label>
+
+      <br>
+
+      Alignment:<br>
+
+      <label>
+        <input type="radio" value="left" v-model="alignment">
+        Left
+      </label>
+
+      <label>
+        <input type="radio" value="center" v-model="alignment">
+        Center
+      </label>
+
+      <label>
+        <input type="radio" value="right" v-model="alignment">
+        Right
+      </label>
+    </div>
 
     <hr>
 
@@ -26,7 +68,9 @@ export default {
   },
   data() {
     return {
-      message: 'WELCOME'
+      message: 'WELCOME',
+      scrollMode: 'auto',
+      alignment: 'center'
     }
   }
 }

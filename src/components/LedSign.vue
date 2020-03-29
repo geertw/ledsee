@@ -7,24 +7,32 @@
 </template>
 
 <script>
-import LedCol from './LedCol.vue'
-import font from '../fonts/5x7';
+import LedCol from "./LedCol.vue";
+import font from "../fonts/5x7";
 
 export default {
-  name: 'LedSign',
+  name: "LedSign",
   components: {
     LedCol
   },
   data() {
     return {
       offsetX: 0,
-      moveX: 1
-    }
+      moveX: 1,
+    };
   },
   props: {
     message: String,
     width: Number,
-    height: Number
+    height: Number,
+    scrollMode: {
+      type: String,
+      default: "auto"
+    },
+    align: {
+      type: String,
+      default: "center"
+    }
   },
   created() {
     setInterval(() => {
@@ -52,16 +60,15 @@ export default {
           let charDef = font[char];
 
           for (let col = 0; col < charDef.length; col++) {
-              let colPixels = [];
-              
-              for (let row = 0; row < this.height; row++) {
-                  let pixelVal = (charDef[col] & (1 << row)) === 0 ? 0 : 1;
-                  colPixels[row] = pixelVal;
-              }
+            let colPixels = [];
 
-              pixels.push(colPixels)
+            for (let row = 0; row < this.height; row++) {
+              let pixelVal = (charDef[col] & (1 << row)) === 0 ? 0 : 1;
+              colPixels[row] = pixelVal;
+            }
+
+            pixels.push(colPixels);
           }
-
         } else {
           // Unrecognized character
           pixels.push([1, 1, 1, 1, 1, 1, 1]);
@@ -74,38 +81,99 @@ export default {
         pixels.push([0, 0, 0, 0, 0, 0, 0]);
       }
 
-      // Always end with 5 pixels spacing:
-      for (let i = 0; i < 5; i++) {
-        pixels.push([0, 0, 0, 0, 0, 0, 0]);
-      }
-
       return pixels;
     },
     pixelArray() {
+      let scrolling = false;
       let pixels = [];
 
       if (this.pixelImage.length == 0) {
-        for (let i = 0; i <= this.width; i++) {
-          pixels.push([0,0,0,0,0,0,0,0]);
+        for (let i = 0; i < this.width; i++) {
+          let pixelCol = [];
+          for (let y = 0; y < this.height; y++) {
+            pixelCol.push(0);
+          }
+          pixels.push(pixelCol);
         }
 
         return pixels;
       }
 
-      pixels = pixels.concat(this.pixelImage.slice(this.offsetX));
+      scrolling =
+        this.scrollMode == "scroll" ||
+        (this.scrollMode == "auto" && this.shouldScroll);
 
-      while (pixels.length < this.width) {
+      if (scrolling) {
+        pixels = pixels.concat(this.pixelImage.slice(this.offsetX));
+
+        // Always end with spacing:
+        for (let i = 0; i < 5; i++) {
+          let pixelCol = [];
+          for (let y = 0; y < this.height; y++) {
+            pixelCol.push(0);
+          }
+          pixels.push(pixelCol);
+        }
+
+        while (pixels.length < this.width) {
+          pixels = pixels.concat(this.pixelImage);
+
+          // Always end with spacing:
+          for (let i = 0; i < 5; i++) {
+            let pixelCol = [];
+            for (let y = 0; y < this.height; y++) {
+              pixelCol.push(0);
+            }
+            pixels.push(pixelCol);
+          }
+        }
+      } else {
+        let pixelsLeft = 0;
+        let pixelsRight = 0;
+
+        if (this.align == "left") {
+          // Left:
+          pixelsLeft = 0;
+          pixelsRight = this.width - this.pixelImage.length - pixelsLeft;
+        } else if (this.align == "right") {
+          // Right:
+          pixelsRight = 0;
+          pixelsLeft = this.width - this.pixelImage.length - pixelsRight;
+        } else {
+          // Center:
+          pixelsLeft = Math.round((this.width - this.pixelImage.length) / 2);
+          pixelsRight = this.width - this.pixelImage.length - pixelsLeft;
+        }
+
+        for (let i = 0; i < pixelsLeft; i++) {
+          let pixelCol = [];
+          for (let y = 0; y < this.height; y++) {
+            pixelCol.push(0);
+          }
+          pixels.push(pixelCol);
+        }
+
         pixels = pixels.concat(this.pixelImage);
+
+        for (let i = 0; i < pixelsRight; i++) {
+          let pixelCol = [];
+          for (let y = 0; y < this.height; y++) {
+            pixelCol.push(0);
+          }
+          pixels.push(pixelCol);
+        }
       }
 
       return pixels;
+    },
+    shouldScroll() {
+      return this.width < this.pixelImage.length;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-
 .col {
   display: inline-block;
   line-height: 0;
