@@ -27,5 +27,6 @@ export default {
 }
 .dot.active {
   background-color: red;
+  box-shadow: 0 0 2px 2px red;
 }
 </style>
