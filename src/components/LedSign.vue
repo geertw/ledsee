@@ -32,7 +32,11 @@ export default {
     align: {
       type: String,
       default: "center"
-    }
+    },
+    scrollSpacing: {
+      type: Number,
+      default: 5
+    },
   },
   created() {
     setInterval(() => {
@@ -42,10 +46,10 @@ export default {
   methods: {
     move() {
       this.offsetX += this.moveX;
-      if (this.offsetX >= this.pixelImage.length) {
+      if (this.offsetX >= this.pixelImage.length + this.scrollSpacing) {
         this.offsetX = 0;
       } else if (this.offsetX < 0) {
-        this.offsetX = this.pixelImage.length - 1;
+        this.offsetX = this.pixelImage.length + this.scrollSpacing - 1;
       }
     }
   },
@@ -106,8 +110,10 @@ export default {
       if (scrolling) {
         pixels = pixels.concat(this.pixelImage.slice(this.offsetX));
 
+        let offsetSpacing = Math.min(0, this.pixelImage.length - this.offsetX);
+
         // Always end with spacing:
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < this.scrollSpacing + offsetSpacing; i++) {
           let pixelCol = [];
           for (let y = 0; y < this.height; y++) {
             pixelCol.push(0);
@@ -119,7 +125,7 @@ export default {
           pixels = pixels.concat(this.pixelImage);
 
           // Always end with spacing:
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < this.scrollSpacing; i++) {
             let pixelCol = [];
             for (let y = 0; y < this.height; y++) {
               pixelCol.push(0);
