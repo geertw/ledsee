@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LedSign :message="message" :width="192" :height="7" :scrollMode="scrollMode" :align="alignment" />
+    <LedSign :message="message" :width="192" :height="7" :scrollMode="scrollMode" :align="alignment" :scrollSpacing="parseInt(scrollSpacing, 10)" />
 
     <hr>
 
@@ -27,6 +27,11 @@
         <input type="radio" value="none" v-model="scrollMode">
         Do not scroll
       </label>
+
+      <br>
+
+      ScrollSpacing:<br>
+      <input type="text" v-model="scrollSpacing">
 
       <br>
 
@@ -70,7 +75,8 @@ export default {
     return {
       message: 'WELCOME',
       scrollMode: 'auto',
-      alignment: 'center'
+      alignment: 'center',
+      scrollSpacing: 192
     }
   }
 }
