@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LedSign :message="message" :width="192" :height="7" :scrollMode="scrollMode" :align="alignment" :scrollSpacing="parseInt(scrollSpacing, 10)" />
+    <LedSign :message="message" :width="192" :height="20" :scrollMode="scrollMode" :align="alignment" :scrollSpacing="parseInt(scrollSpacing, 10)" />
 
     <hr>
 
@@ -56,7 +56,7 @@
     <hr>
 
     <div>
-        <CharCreate :width="5" :height="7"></CharCreate>
+        <CharCreate :width="20" :height="20"></CharCreate>
     </div>
   </div>
 </template>

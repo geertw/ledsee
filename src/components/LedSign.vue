@@ -8,7 +8,8 @@
 
 <script>
 import LedCol from "./LedCol.vue";
-import font from "../fonts/5x7";
+// import font from "../fonts/5x7";
+import font from "../fonts/arial";
 
 export default {
   name: "LedSign",
